@@ -2,6 +2,7 @@ package orchestrator
 
 import (
 	"context"
+	"fmt"
 	"sync"
 	"time"
 
@@ -124,6 +125,9 @@ func (o *BasicOrchestrator) RegisterAgent(a agent.Agent) error {
 
 	// Use the agent's name as ID
 	agentID := a.Name()
+	if _, exists := o.agents[agentID]; exists {
+		return fmt.Errorf("RegisterAgent: agent with ID '%s' already registered (file: orchestrator.go, func: RegisterAgent)", agentID)
+	}
 	o.agents[agentID] = a
 	return nil
 }

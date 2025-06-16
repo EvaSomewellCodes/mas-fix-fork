@@ -74,6 +74,10 @@ func NewFactory() *Factory {
 	}
 }
 
+// DefaultFactory is the global provider registry for LLM providers.
+var DefaultFactory = NewFactory()
+
+
 func (f *Factory) Register(
 	providerType string,
 	creator func(Config) (Provider, error),

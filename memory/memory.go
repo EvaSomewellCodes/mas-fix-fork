@@ -3,6 +3,7 @@ package memory
 import (
 	"context"
 	"time"
+	"strings"
 )
 
 // Memory defines the memory system for agents
@@ -192,7 +193,7 @@ func (v *VectorStore) Clear(ctx context.Context) error {
 }
 
 func contains(s, substr string) bool {
-	return s != "" && substr != "" && s != substr
+	return s != "" && substr != "" && strings.Contains(s, substr)
 }
 
 var (

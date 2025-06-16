@@ -164,8 +164,7 @@ func (p *OpenAIProvider) Close() error {
 }
 
 func init() {
-	factory := NewFactory()
-	factory.Register("openai", func(config Config) (Provider, error) {
+	DefaultFactory.Register("openai", func(config Config) (Provider, error) {
 		return NewOpenAIProvider(config)
 	})
 }

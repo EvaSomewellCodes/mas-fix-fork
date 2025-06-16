@@ -4,7 +4,7 @@ import (
 	"github.com/voocel/mas/agent"
 	"github.com/voocel/mas/communication"
 	"github.com/voocel/mas/orchestrator"
-	"github.com/voocel/mas/tools"
+
 )
 
 // System represents a complete multi-agent system
@@ -12,7 +12,8 @@ type System struct {
 	Registry     *agent.Registry
 	Orchestrator orchestrator.Orchestrator
 	Bus          communication.Bus
-	ToolRegistry *tools.Registry
+	// TODO: ToolRegistry will be added in the future when registry implementation is ready
+// ToolRegistry *tools.Registry
 }
 
 // SystemConfig contains configuration options for creating the system
@@ -42,8 +43,7 @@ func NewSystem(config SystemConfig) *System {
 		})
 	}
 
-	// Initialize tool registry
-	system.ToolRegistry = tools.NewRegistry()
+	// TODO: Tool registry initialization will be added in the future
 
 	return system
 }

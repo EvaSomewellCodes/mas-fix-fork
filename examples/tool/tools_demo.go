@@ -9,19 +9,58 @@ import (
 	"strings"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/voocel/mas/agent"
 	"github.com/voocel/mas/llm"
 	"github.com/voocel/mas/tools"
 )
 
+// Loads .env at startup. Reads LLM_PROVIDER, LLM_API_KEY, LLM_BASE_URL, LLM_MODEL, LLM_TIMEOUT from env.
+// Defaults: PROVIDER=openai, BASE_URL=https://api.openai.com/v1, MODEL=gpt-4o, TIMEOUT=30
+
+// Loads .env at startup. Reads OPENAI_API_KEY, OPENAI_BASE_URL, OPENAI_MODEL, OPENAI_TIMEOUT from env.
+// Defaults: BASE_URL=https://api.openai.com/v1, MODEL=gpt-4o, TIMEOUT=30
+
 // ToolsDemo demonstrates how to use the refactored tools system
 func main() {
-	// Initialize LLM provider
-	provider, err := llm.NewOpenAIProvider(llm.Config{
-		APIKey:       os.Getenv("OPENAI_API_KEY"),
-		DefaultModel: "gpt-4o",
-		Timeout:      30,
+	// Load .env from project root first, then current directory
+	_ = godotenv.Load("../../.env")
+	_ = godotenv.Load()
+	log.Println("Loaded .env from ../../.env and ./ if present")
+
+	// Gather config from env (LLM_PROVIDER, LLM_API_KEY, LLM_BASE_URL, LLM_MODEL, LLM_TIMEOUT)
+	providerType := os.Getenv("LLM_PROVIDER")
+	if providerType == "" {
+		providerType = "openai"
+	}
+	apiKey := os.Getenv("LLM_API_KEY")
+	baseURL := os.Getenv("LLM_BASE_URL")
+	if baseURL == "" {
+		baseURL = "https://api.openai.com/v1"
+	}
+	model := os.Getenv("LLM_MODEL")
+	if model == "" {
+		model = "gpt-4o"
+	}
+	timeout := 30
+	if t := os.Getenv("LLM_TIMEOUT"); t != "" {
+		if v, err := strconv.Atoi(t); err == nil {
+			timeout = v
+		}
+	}
+
+	// Use llm.Factory for provider selection
+	provider, err := llm.DefaultFactory.Create(llm.Config{
+		ProviderType: providerType,
+		APIKey:       apiKey,
+		BaseURL:      baseURL,
+		DefaultModel: model,
+		Timeout:      timeout,
 	})
+	if err != nil {
+		log.Fatalf("Failed to initialize LLM provider '%s': %v", providerType, err)
+	}
+
 	if err != nil {
 		log.Fatalf("Failed to initialize LLM provider: %v", err)
 	}
