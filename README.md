@@ -30,6 +30,32 @@ mas/
 
 ## Quick Start
 
+### Environment Setup
+
+MAS uses a `.env` file in the project root to configure LLM provider credentials and settings. Copy `example.env` to `.env` and fill in your real API key and preferences:
+
+```bash
+cp example.env .env
+```
+
+Edit `.env` to set your provider and API key:
+
+```env
+LLM_PROVIDER=openai
+LLM_API_KEY=sk-...your-key-here...
+LLM_BASE_URL=https://api.openai.com/v1
+LLM_MODEL=gpt-4o
+LLM_TIMEOUT=30
+```
+
+- **LLM_PROVIDER**: Provider type (default: `openai`)
+- **LLM_API_KEY**: Your LLM provider API key (required)
+- **LLM_BASE_URL**: API base URL (default: OpenAI official endpoint)
+- **LLM_MODEL**: Model name (e.g., `gpt-4o`)
+- **LLM_TIMEOUT**: Timeout in seconds (default: 30)
+
+The MAS examples and agent code will automatically load `.env` from the project root. You do not need to copy `.env` into each example directory.
+
 ### Installation
 
 ```bash
